@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+//เพิ่ม telephone
 const UserSchema=new mongoose.Schema({
     name:{
         type:String,
@@ -15,11 +16,22 @@ const UserSchema=new mongoose.Schema({
             'Please add a valid email'
         ]
     },
+    //เพิ่ม tel
+    telephone:{
+        type:String,
+        required:[true,'Please add a telephone number'],
+        unique: true,
+        match: [/^[0-9]{9,10}$/,
+            'Please add a valid telephone number (9-10 digits)'
+        ]
+    },
+    
     role: {
         type:String,
         enum: ['user','admin'],
         default: 'user'
     },
+    
     password: {
         type:String,
         required:[true,'Please add a password'],
