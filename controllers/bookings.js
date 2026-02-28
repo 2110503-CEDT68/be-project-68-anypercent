@@ -1,5 +1,6 @@
 const Booking = require('../models/Booking');
 const Dentist = require('../models/Dentist');
+const mongoose = require('mongoose');
 
 //@desc Get all bookings (admin)
 //@route GET /api/v1/bookings
@@ -69,44 +70,53 @@ exports.getBooking = async (req, res) => {
 //@desc Create booking (ONE session per user)
 //@route POST /api/v1/bookings
 //@access Private
-exports.createBooking = async (req, res) => {
+exports.createBooking = async (req, res, next) => {
   try {
-    const { dentist: dentistId, date } = req.body;
+    const { bookingDate, dentist } = req.body;
 
-    if (!dentistId || !date) {
-      return res.status(400).json({ success: false, message: 'Please provide dentist and date' });
+    if (!bookingDate || !dentist) {
+      return res.status(400).json({ success: false, msg: 'Please provide bookingDate and dentist' });
     }
 
-    const dentist = await Dentist.findById(dentistId);
-    if (!dentist) {
-      return res.status(404).json({ success: false, message: `No dentist with id ${dentistId}` });
+    // ✅ NEW: user จองได้แค่ 1 ครั้ง ถ้ามีแล้วให้ reject
+    const existingBooking = await Booking.findOne({ user: req.user.id });
+    if (existingBooking) {
+      return res.status(409).json({
+        success: false,
+        msg: 'You already have a booking. One session per user is allowed.',
+        data: existingBooking
+      });
     }
 
-    // Non-admin users can have ONLY ONE booking
-    if (req.user.role !== 'admin') {
-      const existed = await Booking.findOne({ user: req.user.id });
-      if (existed) {
-        return res.status(409).json({
-          success: false,
-          message: `The user with ID ${req.user.id} already has a booking. Only one session is allowed.`,
-        });
+    let dentistId;
+
+    // ถ้าเป็น ObjectId ให้ใช้เลย ไม่งั้นถือว่าเป็นชื่อ
+    if (mongoose.Types.ObjectId.isValid(dentist)) {
+      dentistId = dentist;
+    } else {
+      const dentistDoc = await Dentist.findOne({ name: dentist.trim() });
+      if (!dentistDoc) {
+        return res.status(404).json({ success: false, msg: 'Dentist not found' });
       }
+      dentistId = dentistDoc._id;
     }
 
     const booking = await Booking.create({
+      bookingDate,
       dentist: dentistId,
-      date,
-      user: req.user.id,
+      user: req.user.id
     });
 
-    res.status(201).json({ success: true, data: booking });
+    // populate ให้ response เป็นข้อมูล user/dentist (มีชื่อ)
+    await booking.populate([
+      { path: 'user', select: 'name email telephone role' },
+      { path: 'dentist', select: 'name areaOfExpertise yearsOfExperience' }
+    ]);
+
+    return res.status(201).json({ success: true, data: booking });
   } catch (err) {
-    // Handle unique index violation (ONE booking per user)
-    if (err && err.code === 11000) {
-      return res.status(409).json({ success: false, message: 'Only one booking per user is allowed.' });
-    }
-    console.log(err.stack);
-    res.status(500).json({ success: false, message: 'Cannot create booking' });
+    console.log(err);
+    return res.status(400).json({ success: false, message: err.message });
   }
 };
 

@@ -15,10 +15,13 @@ exports.register=async (req,res,next)=>{
         //const token=user.getSignedJwtToken();
         //res.status(200).json({success:true});
         sendTokenResponse(user,200,res);
-    }catch(err)
-    {
-        res.status(400).json({success:false});
-        console.log(err.stack)
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json({
+            success: false,
+            message: err.message,
+            errors: err.errors
+        });
     }
 };
 
