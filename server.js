@@ -17,15 +17,16 @@ app.use(express.json());
 //Cookie parser
 app.use(cookieParser());
 
-const hospitals = require ('./routes/hospitals');
+
 const auth = require('./routes/auth');
-const appointments =require('./routes/appointments');
+const dentists = require('./routes/dentists');
+const bookings = require('./routes/bookings');
 
-app.use('/api/v1/hospitals',hospitals);
-app.use('/api/v1/auth',auth);
-app.use('/api/v1/appointments',appointments);
+app.use('/api/v1/auth', auth);
+app.use('/api/v1/dentists', dentists);
+app.use('/api/v1/bookings', bookings);
 
-const PORT = process.env.PORT || 5003;
+const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, console.log('Server running in ', process.env.NODE_ENV, ' mode on port ', PORT));
 
