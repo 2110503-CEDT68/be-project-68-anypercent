@@ -13,7 +13,6 @@ const {
   deleteBooking,   // owner/admin DELETE /:id
 } = require('../controllers/bookings');
 
-// helper: โหลด booking ของ user แล้ว set req.params.id
 const setMyBookingId = async (req, res, next) => {
   try {
     const booking = await Booking.findOne({ user: req.user.id });
@@ -28,16 +27,15 @@ const setMyBookingId = async (req, res, next) => {
   }
 };
 
-// ✅ USER
+// USER
 router.post('/', protect, createBooking);
 
 router.get('/me', protect, getMyBooking);
 
-// ทำให้ /me PUT/DELETE ใช้ controller เดิมได้
 router.put('/me', protect, setMyBookingId, updateBooking);
 router.delete('/me', protect, setMyBookingId, deleteBooking);
 
-// ✅ ADMIN
+// ADMIN
 router.get('/', protect, authorize('admin'), getBookings);
 
 // (optional) owner/admin ดูรายตัว
