@@ -16,7 +16,6 @@ const UserSchema=new mongoose.Schema({
             'Please add a valid email'
         ]
     },
-    //เพิ่ม tel
     telephone:{
         type:String,
         required:[true,'Please add a telephone number'],

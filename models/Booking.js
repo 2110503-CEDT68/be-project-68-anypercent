@@ -1,6 +1,3 @@
-//เปลี่ยนจากhospitalเป็นdentist
-//เปลี่ยนAppointmentเป็นBooking
-
 const mongoose = require('mongoose');
 
 const Dentist = require('./Dentist');

@@ -1,5 +1,3 @@
-//เพิ่ม areaOfExpertise,yearsOfExperience
-//เปลี่ยนจาก Hospital เป็น Dentist
 
 const mongoose = require('mongoose');
 
@@ -33,8 +31,6 @@ const DentistSchema = new mongoose.Schema({
     toObject:{virtuals:true}
 });
 
-//Reverse populate with virtuals
-//เปลี่ยนเป็น Dentist 
 DentistSchema.virtual('bookings',{
     ref: 'Booking',
     localField: '_id',
