@@ -9,7 +9,6 @@ const DentistSchema = new mongoose.Schema({
         trim:true,
         maxlength:[50,'Name can not be more than 50 character']
     },
-    //หมอนี้ทำไรบ้าง จัดฟัน อุดฟัน บลาๆๆๆ
     areaOfExpertise:{
         type: String,
         required: [true,'Please add an areaOfExpertise'],
@@ -21,7 +20,6 @@ const DentistSchema = new mongoose.Schema({
             'ศัลยกรรมช่องปาก'
         ]
     },
-    //จำนวนปีที่ทำงาน
     yearsOfExperience:{
         type: Number,
         required: [true,'Please add an yearsOfExperience'],
