@@ -78,7 +78,6 @@ exports.createBooking = async (req, res, next) => {
       return res.status(400).json({ success: false, msg: 'Please provide bookingDate and dentist' });
     }
 
-    // ✅ NEW: user จองได้แค่ 1 ครั้ง ถ้ามีแล้วให้ reject
     const existingBooking = await Booking.findOne({ user: req.user.id });
     if (existingBooking) {
       return res.status(409).json({
