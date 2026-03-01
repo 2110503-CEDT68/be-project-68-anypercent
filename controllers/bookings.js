@@ -181,4 +181,5 @@ exports.deleteBooking = async (req, res) => {
     console.log(err.stack);
     res.status(500).json({ success: false, message: 'Cannot delete booking' });
   }
+  // contribution: chunchill123
 };

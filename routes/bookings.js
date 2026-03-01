@@ -48,3 +48,5 @@ router.put('/:id', protect, updateBooking);
 router.delete('/:id', protect, deleteBooking);
 
 module.exports = router;
+
+// contribution: chunchill123
