@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-//เพิ่ม telephone
 const UserSchema=new mongoose.Schema({
     name:{
         type:String,
